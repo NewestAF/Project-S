@@ -5,24 +5,27 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    #region Stat
+    
     [SerializeField] private float walkSpeed;
-
     [SerializeField] private float runSpeed;
 
-    [SerializeField] private float sightSensitivity;
+    #endregion
 
-    [SerializeField] private float cameraRotationLimit;
+    #region Condition
 
-    [SerializeField] private Camera playerCamera;
+    private bool isRunning;
 
-    private Rigidbody _rigidbody;
-    private float _currentCamaraRotationX = 0f;
+    #endregion
+    
+
+    private new Rigidbody rigidbody;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        _rigidbody = GetComponent<Rigidbody>();
+        rigidbody = GetComponent<Rigidbody>();
     }
     void Awake()
     {
@@ -33,18 +36,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
-        RotateCamera();
         RotateCharacter();
     }
 
     private void Move()
     {
-        float actualSpeed;
-
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            
-        }
+        CheckIsRunning();
         
         float moveDirX = Input.GetAxisRaw("Horizontal");
         float moveDirZ = Input.GetAxisRaw("Vertical");
@@ -56,27 +53,26 @@ public class PlayerController : MonoBehaviour
 
         Vector3 velocity = (moveHorizontal + moveVertical).normalized * walkSpeed;
 
-        _rigidbody.MovePosition(trans.position + velocity * Time.deltaTime);
+        rigidbody.MovePosition(trans.position + velocity * Time.deltaTime);
 
+    }
+
+    private void CheckIsRunning()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            
+        }
+        
     }
 
     private void RotateCharacter()
     {
         float yRotation = Input.GetAxisRaw("Mouse X");
-        Vector3 characterRotationY = new Vector3(0f, yRotation, 0f) * sightSensitivity;
+        Vector3 characterRotationY = new Vector3(0f, yRotation, 0f) * 10;
         
-        _rigidbody.MoveRotation(_rigidbody.rotation * Quaternion.Euler(characterRotationY));
+        rigidbody.MoveRotation(rigidbody.rotation * Quaternion.Euler(characterRotationY));
     }
 
-    private void RotateCamera()
-    {
-        float xRotation = Input.GetAxisRaw("Mouse Y");
-        float cameraRotationX = xRotation * sightSensitivity;
-
-        _currentCamaraRotationX -= cameraRotationX;
-        _currentCamaraRotationX = Mathf.Clamp(
-            _currentCamaraRotationX, -cameraRotationLimit, cameraRotationLimit);
-
-        playerCamera.transform.localEulerAngles = new Vector3(_currentCamaraRotationX, 0, 0);
-    }
+    
 }
