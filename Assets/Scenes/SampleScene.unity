@@ -379,6 +379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 10
   runSpeed: 30
+  jumpForce: 10
 --- !u!23 &1621705018
 MeshRenderer:
   m_ObjectHideFlags: 0
